@@ -11,9 +11,6 @@ class Menukeuze {
         this.isTerug = false;
     }
 
-    public Menukeuze(int index, String tekst) {
-        this(index, tekst, null);
-    }
 
     public Menukeuze(int index, String tekst, boolean isTerug) {
         this(index, tekst, null);

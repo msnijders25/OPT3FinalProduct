@@ -1,9 +1,8 @@
 import java.util.ArrayList;
+import java.util.Scanner;
 
 class DataSeeder {
     private static DataSeeder instance = null;
-    private ArrayList<IMenu> menus;
-    private ArrayList<IMenu> adminMenus;
 
     private ArrayList<IKleding> hoodies;
     private ArrayList<IKleding> broeken;
@@ -17,14 +16,41 @@ class DataSeeder {
 
 
     private DataSeeder() {
-        adminMenus = new ArrayList<>();
-        menus = new ArrayList<>();
+
         hoodies = new ArrayList<>();
         broeken = new ArrayList<>();
         shirts = new ArrayList<>();
         alleKleding = new ArrayList<>();
         seedData();
     }
+    public void updateKledingPrijs(IKleding kleding, double nieuwePrijs) {
+        ArrayList<IKleding> kledingItems = getAlleKleding();
+        Scanner scanner = new Scanner(System.in);
+
+        for (IKleding item : kledingItems) {
+            if (item.getNaam().equals(kleding.getNaam())) {
+                item.setPrijs(nieuwePrijs);
+                System.out.println(kleding.getNaam() + " heeft nu een nieuwe prijs: " + nieuwePrijs);
+                return;
+            }
+        }
+        System.out.println("ERROR: " + kleding.getNaam() + " zit niet in de database.");
+    }
+
+    public void updateKledingVoorraad(IKleding kleding, int nieuweVoorraad) {
+        ArrayList<IKleding> kledingItems = getAlleKleding();
+        Scanner scanner = new Scanner(System.in);
+
+        for (IKleding item : kledingItems) {
+            if (item.getNaam().equals(kleding.getNaam())) {
+                item.setVoorraad(nieuweVoorraad);
+                System.out.println(kleding.getNaam() + " Voorraad is nu: " + nieuweVoorraad);
+                return;
+            }
+        }
+        System.out.println("ERROR: " + kleding.getNaam() + " zit niet in de database.");
+    }
+
 
     public static DataSeeder getInstance() {
         if (instance == null) {
@@ -34,7 +60,6 @@ class DataSeeder {
     }
 
     private void seedData() {
-        // Seed Menus
 
 
 

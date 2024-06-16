@@ -5,7 +5,6 @@ public class ActieKledingToevoegen implements IActie {
 
     public ActieKledingToevoegen(IKleding kleding) {
         this.kleding = kleding;
-        voerUit();
     }
 
     @Override

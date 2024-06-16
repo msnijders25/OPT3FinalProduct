@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 class Mandje implements ObserverPrijzen {
+
+    Korting korting;
     private ArrayList<IKleding> items;
     private ArrayList<MandjeObserver> observers;
 
@@ -14,6 +16,14 @@ class Mandje implements ObserverPrijzen {
         System.out.println("Mandje created with items: " + items);
     }
 
+
+    public void setKorting(Korting korting) {
+        this.korting = korting;
+    }
+
+    public Korting getKorting() {
+        return korting;
+    }
     public void voegKledingToe(IKleding kleding) {
         items.add(kleding);
         notifyObservers();

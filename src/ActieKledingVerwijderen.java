@@ -5,7 +5,7 @@ public class ActieKledingVerwijderen implements IActie {
 
     public ActieKledingVerwijderen(String kledingNaam) {
         this.kledingNaam = kledingNaam;
-        voerUit();
+
     }
 
     @Override

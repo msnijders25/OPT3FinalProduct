@@ -1,3 +1,5 @@
+import java.util.Scanner;
+
 public class ActieZieMandje implements IActie {
     private Account account;
 
@@ -8,8 +10,9 @@ public class ActieZieMandje implements IActie {
 
     @Override
     public void voerUit() {
+        Scanner scanner = new Scanner(System.in);
         System.out.println("Mandje in ActieZieMandje: " + account.getMandje());
         MandjeMenu mandjeMenu = new MandjeMenu(this.account);
-        mandjeMenu.toonMenu();
+        mandjeMenu.handleMenu(scanner);
     }
 }

@@ -5,7 +5,7 @@ class Prijs implements Observer {
     public Prijs(double waarde, Currency currency) {
         this.waarde = waarde;
         this.currency = currency;
-        this.currency.addObserver(this);
+
     }
 
     public Prijs(int waarde) {

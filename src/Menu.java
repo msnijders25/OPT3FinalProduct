@@ -9,7 +9,6 @@ abstract class Menu implements IMenu {
     public Menu(String naam) {
         this.naam = naam;
         this.opties = new ArrayList<>();
-         // Initialize menu options once during construction
     }
 
     protected abstract void initializeMenuOpties();
@@ -75,7 +74,7 @@ class ActieVoegKortingMandje {
         return nieuwePrijs;
     }
     public void voerActieUit(Account account) {
-        Korting korting = account.getKorting();
+        Korting korting = new Korting(1);
         if (korting != null) {
             double kortingPercentage = korting.getKorting();
             this.nieuwePrijs = prijs * (1 - kortingPercentage);
@@ -87,33 +86,32 @@ class ActieVoegKortingMandje {
 
 class MandjeMenu extends Menu {
     public Account account;
-    Scanner scanner = new Scanner(System.in);
+
 
     public MandjeMenu(Account account) {
         super("Mandje Menu");
         this.account = account;
         System.out.println("MandjeMenu geinitaliseerd: " + account);
         System.out.println("Account's mandje: " + account.getMandje());
-        ;
+
     }
 
     @Override
     protected void initializeMenuOpties() {
-        Mandje mandje = account.getMandje();
-        ArrayList<IKleding> items = mandje.getItems();
+        this.opties.clear();
 
-        if (mandje.isEmpty()) {
+        if (account.getMandje().isEmpty()) {
             System.out.println("Het mandje is leeg.");
             return;
         }
 
         int i = 1;
-        for (IKleding kleding : items) {
-            voegOptieToe(new Menukeuze(i, "Verwijder " + kleding + " uit mandje", new ActieVerwijderKledingUitMandje(kleding, account)));
+        for (IKleding kleding : account.getMandje().getItems()) {
+            voegOptieToe(new Menukeuze(i, "Verwijder " + kleding.getNaam() + " uit mandje", new ActieVerwijderKledingUitMandje(kleding, account)));
             i++;
-            voegOptieToe(new Menukeuze(i, "Verander hoeveelheid van " + kleding, new ActieVeranderHoeveelheid(kleding, account)));
+            voegOptieToe(new Menukeuze(i, "Verander hoeveelheid van " + kleding.getNaam(), new ActieVeranderHoeveelheid(kleding, account)));
             i++;
-            voegOptieToe(new Menukeuze(i, "Bekijk details van " + kleding, new ActieBekijkDetails(kleding, account)));
+            voegOptieToe(new Menukeuze(i, "Bekijk details van " + kleding.getNaam(), new ActieBekijkDetails(kleding, account)));
             i++;
         }
 
@@ -121,33 +119,10 @@ class MandjeMenu extends Menu {
         i++;
 
         voegOptieToe(new Menukeuze(i, "Terug", true));
+
     }
-        @Override
-        public void toonMenu() {
-            initializeMenuOpties();
 
-            ArrayList<IKleding> items = account.getMandje().getItems();
-            double totaalPrijs = 0;
-            for (IKleding kleding : items) {
-                totaalPrijs += kleding.getPrijs().getWaarde();
-            }
-            System.out.println("Totale prijs: " + totaalPrijs);
-
-            Scanner scanner = new Scanner(System.in);
-            System.out.println("Wilt u een korting toepassen? (Y/N)");
-            String antwoord = scanner.nextLine().trim().toUpperCase();
-
-            if (antwoord.equals("Y")) {
-                ActieVoegKortingMandje actieKorting = new ActieVoegKortingMandje(totaalPrijs);
-                actieKorting.voerActieUit(account);
-                double nieuwePrijs = actieKorting.getNieuwePrijs();
-                System.out.println("Nieuwe prijs na korting: " + nieuwePrijs);
-            } else {
-                System.out.println("Geen korting toegepast. Totale prijs blijft: " + totaalPrijs);
-            }
         }
-    }
-
 
 
 
@@ -155,11 +130,6 @@ class MandjeMenu extends Menu {
 class ActieVerwijderKledingUitMandje implements  IActie {
     private IKleding kleding;
     public Account account;
-
-    public ActieVerwijderKledingUitMandje(Kleding kleding, Account account) {
-        this.kleding = kleding;
-        this.account = account;
-    }
 
     public ActieVerwijderKledingUitMandje(IKleding kleding, Account account) {
         this.kleding = kleding;
@@ -180,14 +150,14 @@ class KlantAccountMenu extends Menu {
     public KlantAccountMenu(String naam, Account account) {
         super(naam);
         this.account = account;
-        System.out.println("KlantAccountMenu initialized with account: " + account);
+        System.out.println("KlantAccountMenu geinitialiseerd met account: " + account);
     }
 
     @Override
     protected void initializeMenuOpties() {
         voegOptieToe(new Menukeuze(1, "Zie Assortiment", new ActieZieAssortimentKlant(account)));
         voegOptieToe(new Menukeuze(2, "Open Mandje", new ActieZieMandje(account)));
-        voegOptieToe(new Menukeuze(3, "Zie Bestellingen", false));
+        voegOptieToe(new Menukeuze(3, "Zie Bestellingen", new ActieZieBestellingen(account)));
         voegOptieToe(new Menukeuze(4, "Verander Koers", false));
         voegOptieToe(new Menukeuze(5, "Verander Taal", false));
         voegOptieToe(new Menukeuze(9, "Terug", true));
@@ -221,7 +191,6 @@ class KlantAdminMenuBewerk extends Menu {
     }
 
     protected void initializeMenuOptiesBewerk(IKleding kleding) {
-        // Clear any existing options to prevent duplication
         this.opties.clear();
         voegOptieToe(new Menukeuze(1, "BewerkPrijs",  new ActieKledingBewerken(kleding)));
         voegOptieToe(new Menukeuze(2, "BewerkVoorraad", new ActieKledingBewerkenVoorraad(kleding)));

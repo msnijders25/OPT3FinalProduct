@@ -1,14 +1,14 @@
 import java.util.ArrayList;
 
-class Currency implements ICurrency, Subject {
+class Currency implements ICurrency {
     private Double koers;
     private String name;
-    private ArrayList<Observer> observers;
+
 
     public Currency(Double koers, String name) {
         this.koers = koers;
         this.name = name;
-        this.observers = new ArrayList<>();
+
     }
 
     @Override
@@ -21,27 +21,6 @@ class Currency implements ICurrency, Subject {
         return name;
     }
 
-    public void setKoers(Double koers) {
-        this.koers = koers;
-        notifyObservers();
-    }
-
-    @Override
-    public void addObserver(Observer observer) {
-        observers.add(observer);
-    }
-
-    @Override
-    public void removeObserver(Observer observer) {
-        observers.remove(observer);
-    }
-
-    @Override
-    public void notifyObservers() {
-        for (Observer observer : observers) {
-            observer.update();
-        }
-    }
 
     public static class EURO extends Currency {
         public EURO() {

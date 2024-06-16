@@ -1,13 +1,46 @@
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class ActieZieAssortiment implements IActie, ObserverPrijzen {
 
-    private Scanner scanner = new Scanner(System.in);
+    private Map<String, ArrayList<IKleding>> kledingMap = new HashMap<>();
 
     public ActieZieAssortiment() {
-        this.scanner =  new Scanner(System.in);
+        kledingMap.put("1", DataSeeder.getInstance().getHoodies());
+        kledingMap.put("2", DataSeeder.getInstance().getShirts());
+        kledingMap.put("3", DataSeeder.getInstance().getBroeken());
+    }
+    private void toonKleding(ArrayList<IKleding> kledingLijst, String categorieNaam) {
+        Scanner scanner = new Scanner(System.in);
+        Account account = new Account();
+        KlantAdminMenuBewerk admin = new KlantAdminMenuBewerk("bb");
+        System.out.println(categorieNaam + ":");
+        for (int i = 0; i < kledingLijst.size(); i++) {
+            IKleding kleding = kledingLijst.get(i);
+            System.out.println((i + 1) + ". " + kleding.getNaam() + " - Prijs: " + kleding.getPrijs());
+        }
+        System.out.println();
+
+
+        System.out.print("Kies een item door het nummer in te voeren (of 0 om terug te gaan): ");
+        int keuze = scanner.nextInt();
+        scanner.nextLine();
+
+        if (keuze >= 1 && keuze <= kledingLijst.size()) {
+            IKleding gekozenKleding = kledingLijst.get(keuze - 1);
+            System.out.println("Je hebt " + gekozenKleding.getNaam() + " gekozen.");
+
+            if (account.getCountry() instanceof Country.NL) {
+                admin.initializeMenuOptiesBewerk(gekozenKleding);
+            } else {
+
+                System.out.println("Error: Functionaliteit nog niet toegepast");
+            }
+
+        } else if (keuze == 0) {
+            System.out.println("Terug naar het vorige menu.");
+        } else {
+            System.out.println("Ongeldige keuze. Probeer opnieuw.");
+        }
     }
 
     @Override
@@ -20,49 +53,17 @@ public class ActieZieAssortiment implements IActie, ObserverPrijzen {
             System.out.println("4. Terug");
 
             System.out.print("Voer uw keuze in: ");
+            Scanner scanner = new Scanner(System.in);
             String keuze = scanner.nextLine();
 
-            switch (keuze) {
-                case "1":
-                    toonKleding(DataSeeder.getInstance().getHoodies(), "Hoodies");
-                    break;
-                case "2":
-                    toonKleding(DataSeeder.getInstance().getShirts(), "Shirts");
-                    break;
-                case "3":
-                    toonKleding(DataSeeder.getInstance().getBroeken(), "Broeken");
-                    break;
-                case "4":
-                    return;
-                default:
-                    System.out.println("Ongeldige keuze. Probeer opnieuw.");
-                    break;
+            ArrayList<IKleding> kledingLijst = kledingMap.get(keuze);
+            if (kledingLijst != null) {
+                toonKleding(kledingLijst, "Categorie"); // Categorie dynamisch bepalen?
+            } else if (keuze.equals("4")) {
+                return; // Terug naar het vorige menu
+            } else {
+                System.out.println("Ongeldige keuze. Probeer opnieuw.");
             }
-        }
-    }
-
-    private void toonKleding(ArrayList<IKleding> kledingLijst, String categorieNaam) {
-        Account account = new Account();
-        KlantAdminMenuBewerk admin = new KlantAdminMenuBewerk("bb");
-        System.out.println(categorieNaam + ":");
-        for (int i = 0; i < kledingLijst.size(); i++) {
-            IKleding kleding = kledingLijst.get(i);
-            System.out.println((i + 1) + ". " + kleding.getNaam());
-        }
-        System.out.println();
-
-        System.out.print("Kies een item door het nummer in te voeren (of 0 om terug te gaan): ");
-        int keuze = scanner.nextInt();
-        scanner.nextLine();//Voor het voorkomen infinite loop
-
-        if (keuze >= 1 && keuze <= kledingLijst.size()) {
-            IKleding gekozenKleding = kledingLijst.get(keuze - 1);
-            System.out.println("Je hebt " + gekozenKleding.getNaam() + " gekozen.");
-            admin.initializeMenuOptiesBewerk(gekozenKleding);
-        } else if (keuze == 0) {
-            System.out.println("Terug naar het vorige menu.");
-        } else {
-            System.out.println("Ongeldige keuze. Probeer opnieuw.");
         }
     }
 

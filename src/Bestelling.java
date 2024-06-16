@@ -1,11 +1,14 @@
 import java.util.ArrayList;
 
-public class Bestelling {
-    String ID;
+class Bestelling {
+    private static int nextOrderId = 1;
+    private int id;
     private ArrayList<IKleding> items;
 
-    public Bestelling() {
+    public Bestelling(IKleding kleding) {
+        this.id = nextOrderId++;
         items = new ArrayList<>();
+        items.add(kleding);
     }
 
     public void voegToe(IKleding kleding) {
@@ -22,6 +25,10 @@ public class Bestelling {
 
     public boolean isEmpty() {
         return items.isEmpty();
+    }
+
+    public int getId() {
+        return id;
     }
 }
 class ActieVeranderHoeveelheid implements IActie {
@@ -50,7 +57,6 @@ class ActieVeranderHoeveelheid implements IActie {
 
     @Override
     public void voerUit() {
-        // Logic to view details of the item
         System.out.println("Details van " + kleding + ":");
         System.out.println(kleding);
     }
@@ -71,7 +77,8 @@ class ActieVeranderHoeveelheid implements IActie {
         } else {
             System.out.println("Bestelling geplaatst met de volgende items:");
             for (IKleding kleding : mandje.getItems()) {
-                System.out.println("- " + kleding);
+                System.out.println("- " + kleding.getNaam());
+                account.addBestelling(kleding);
             }
             mandje.getItems().clear();
         }

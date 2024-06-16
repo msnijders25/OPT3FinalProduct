@@ -1,0 +1,5 @@
+interface IActie {
+
+
+    void voerUit();
+}

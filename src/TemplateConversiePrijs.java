@@ -38,7 +38,6 @@ abstract class PrijsProcessorV2 extends SubjectPrijzen {
             }
         }
 
-    // Template method that defines the steps for price processing
     public final void processPrijzen(ArrayList<Prijs> prijzen, Sale sale, ICurrency currency) {
         getPrijzen(prijzen);
         pasValutaToeOpPrijzen(prijzen, currency);
@@ -55,7 +54,6 @@ abstract class PrijsProcessorV2 extends SubjectPrijzen {
             observer.update(prijs);
         }
     }
-    // Abstract methods to be implemented by subclasses
     protected abstract void getPrijzen(ArrayList<Prijs> prijzen);
 
     protected abstract void pasValutaToeOpPrijzen(ArrayList<Prijs> prijzen, ICurrency currency);
